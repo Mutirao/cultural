@@ -384,6 +384,10 @@ img.size-large,
     max-width: 100%;
 }
 
+img.size-full{
+    width: 100%;
+}
+
 /* Make sure embeds and iframes fit their containers */
 
 embed,
@@ -532,7 +536,7 @@ img.aligncenter {
     display: none;
 }
 
-.fullscreen {
+.fullscreen, .hidden {
     display: none;
 }
 
@@ -564,6 +568,32 @@ img.aligncenter {
 
 .admin-bar .site-header {
     top: 32px;
+}
+
+#share-buttons {
+    margin-bottom: 24px;
+
+    img,
+    span {
+     display: inline;
+    }
+
+    span {
+        font-size: 0.75rem;
+    }
+
+    img {
+        margin: 0 0.2rem;
+        vertical-align: middle;
+        width: 1.5rem;
+    }
+
+    @media (min-width: 768px) and (max-width: 1200px) {
+        span {
+            display: block;
+        }
+    }
+
 }
 
 
@@ -719,6 +749,7 @@ img.aligncenter {
         display: inline-block;
         padding: .75rem 1em;
         transition: background-color .1s ease-out;
+        width: 100%;
     }
 
     a:hover {
@@ -745,8 +776,12 @@ img.aligncenter {
 }
 
 .menu--mobile {
-    background-color: $color--highlight;
+    // background-color: #d8e7f6;
+    @extend .menu--main;
     @include size(18,2);
+    @media screen and (min-width: 40em){
+        display: none;
+    }
 }
 
 .sub-menu {
@@ -1839,9 +1874,12 @@ button.mfp-arrow-left {
 }
 
 .category-events-link {
+    color: #000;
+    background: rgba(255,255,255,0.8);
     float: right;
-    color: #fff;
-    @include size(12,2);
+    margin-right: -1.5rem;
+    padding: 0 15px;
+    @include size(16,2);
     &:hover {
         color: #000;
     }
@@ -2166,11 +2204,14 @@ button.mfp-arrow-left {
 -------------------------------------------------------------- */
 
 .event-container {
-    background-color: rgba(41,39,36,.08);
-    box-shadow:inset 0 0 0 4px rgba(41,39,36,.08);
+    box-shadow:inset 0 0 0 4px #EEEEED;
     @include size(14);
     overflow: hidden;
     position: relative;
+
+    h4 {
+        margin: 10px 0 0 0;
+    }
 }
 
 .event__image {
@@ -2184,7 +2225,9 @@ button.mfp-arrow-left {
 
     .event__title {
         @include size(18);
-        margin: 0 0 1.5rem 0;
+        background: #EEEEED;
+        padding: 1.5rem;
+        margin: -1.5rem -1.5rem 1.5rem -1.5rem;
     }
 
     .event__info {
@@ -2222,7 +2265,7 @@ button.mfp-arrow-left {
     color: #fff;
     display: inline-block;
     @include size(12);
-    padding: 0 .5em;
+    padding: .15em .5em;
 }
 
 .event__price {
@@ -2230,6 +2273,9 @@ button.mfp-arrow-left {
 
     .fa-circle {
         color: #f1c40f;
+    }
+    .fa-stack {
+        background: #F1C40F;
     }
 }
 
@@ -2406,4 +2452,13 @@ button.mfp-arrow-left {
     transform: scaleY(1.0);
     -webkit-transform: scaleY(1.0);
   }
+}
+
+@media screen and (max-width: 40em) {
+    #mobile-menu-handler {
+        display:block;
+    }
+    #tabs-menu-handler {
+		display: none;
+    }
 }

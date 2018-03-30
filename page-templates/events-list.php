@@ -51,12 +51,12 @@ if(is_category()){
                 <input class="form-control date-picker date" ng-model="dateRange"
                        date-range-picker="{
                        format:'DD/MMMM',
-                       separator: '  a  ',
+                       separator: '  ->  ',
                        locale: {
-                       applyLabel: 'Aplicar',
-                       cancelLabel: 'Cancelar',
-                       fromLabel: 'De',
-                       toLabel: 'Até'
+                           applyLabel: '<?php esc_attr_e('Aplicar', 'cultural'); ?>',
+                           cancelLabel: '<?php esc_attr_e('Cancelar', 'cultural'); ?>',
+                           fromLabel: '<?php esc_attr_e('De', 'cultural'); ?>',
+                           toLabel: '<?php esc_attr_e('Até', 'cultural'); ?>'
                        },
                        applyClass: 'testApplyClass btn-primary btn-xs',
                        cancelClass: 'testCancelClass btn-xs',
@@ -66,24 +66,22 @@ if(is_category()){
                        >
             </div>
         </div>
-
         <div ng-if="data.linguagens.length > 1" class="filter">
-            <span class="label"><?php _e('Linguagem', 'cultural'); ?></span>
-            <div class="dropdown">
-                <div class="placeholder">
-                    <span ng-if="!svc.data.linguagens.length"><?php _e('Selecione as linguagens', 'cultural'); ?></span>
-                    <span ng-if="svc.data.linguagens.length">{{svc.data.linguagens.join(', ')}}</span>
-                </div>
-                <div class="submenu-dropdown">
-                    <ul class="lista-de-filtro select">
-                        <li ng-repeat="linguagem in data.linguagens" ng-class="{'selected': linguagem.active}" ng-click="toggleListItem('linguagens', linguagem)" class="ng-scope">
-                            <span>{{linguagem.name}}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+             <span class="label"><?php _e('Linguagem', 'cultural'); ?></span>
+             <div class="dropdown">
+                 <div class="placeholder">
+                     <span ng-if="!svc.data.linguagens.length"><?php _e('Selecione as linguagens', 'cultural'); ?></span>
+                     <span ng-if="svc.data.linguagens.length">{{svc.data.linguagens.join(', ')}}</span>
+                 </div>
+                 <div class="submenu-dropdown">
+                     <ul class="lista-de-filtro select">
+                         <li ng-repeat="linguagem in data.linguagens" ng-class="{'selected': linguagem.active}" ng-click="toggleListItem('linguagens', linguagem)" class="ng-scope">
+                             <span>{{linguagem.name}}</span>
+                         </li>
+                     </ul>
+                 </div>
+             </div>
+         </div>
         <div ng-if="data.classificacoes" class="filter">
             <span class="label"><?php _e('Classificação', 'cultural'); ?></span>
             <div id="classificacao" class="dropdown">
@@ -138,10 +136,11 @@ if(is_category()){
                     <!--a href="#" class="js-more-occurrences"><i class="fa fa-plus-circle"></i></a-->
                 </div>
 
-                <div style="margin: -10px 0 10px 0">
-                    {{event.terms.linguagem.length == 1 ? '<?php _e('Linguagem', 'cultural'); ?>' : '<?php _e('Linguagens', 'cultural'); ?>'}}: {{event.terms.linguagem.join(', ')}}
+                <div class="event__languages" style="margin: -10px 0 10px 0">
+                    <h4 class="event__languages--title">{{event.terms.linguagem.length == 1 ? '<?php _e('Linguagem', 'cultural'); ?>' : '<?php _e('Linguagens', 'cultural'); ?>'}}:</h4> {{event.terms.linguagem.join(', ')}}
                 </div>
                 <span class="event__classification">{{event.classificacaoEtaria}}</span>
+
                 <div class="event__price">
                     <span class="fa-stack">
                         <i class="fa fa-circle fa-stack-2x"></i>
@@ -150,8 +149,18 @@ if(is_category()){
                     {{event.occurrences[0].rule.price}}
                 </div>
 
-                <div ng-if="event.project.name"><strong>projeto:</strong> <a href="{{event.project.singleUrl}}">{{event.project.name}}</a></div>
-                <div><strong>publicado por:</strong> <a href="{{event.owner.singleUrl}}">{{event.owner.name}}</a></div>
+                <div ng-if="event.traducaoLibras == 'Sim' && event.descricaoSonora == 'Sim'" class="event__accessibility"><strong>acessibilidade:</strong> Tradução para LIBRAS, Áudio descrição</div>
+                <div ng-if="event.traducaoLibras == 'Sim' && event.descricaoSonora != 'Sim'" class="event__accessibility"><strong>acessibilidade:</strong> Tradução para LIBRAS</div>
+                <div ng-if="event.traducaoLibras != 'Sim' && event.descricaoSonora == 'Sim'" class="event__accessibility"><strong>acessibilidade:</strong> Áudio descrição</div>
+
+                <div ng-if="event.project.name">
+                		<h4><?php _e('Projeto', 'cultural');?>:</h4>                   
+                    	<a href="{{event.project.singleUrl}}">{{event.project.name}}</a>
+                </div>
+                <div ng-if="event.owner.name">
+                		<h4><?php _e('Publicado por', 'cultural');?>:</h4>                    
+                    <a href="{{event.owner.singleUrl}}">{{event.owner.name}}</a>
+                </div>
                 <a href="{{event.singleUrl}}" target="_blank" class="event__info"><?php _e('Mais informações', 'cultural'); ?></a>
             </div>
         </div>

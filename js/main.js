@@ -4,11 +4,21 @@ jQuery(document).ready(function( $ ) {
     $( "ul.toggle-bar a" ).click( function() {
         var tab_id = $( this ).attr( "data-tab" );
 
+		if (typeof(tab_id) == 'undefined') return true;
+
         $( "ul.toggle-bar li a" ).removeClass( "current" );
         $( ".tab-content" ).removeClass( "current" );
 
         $( this ).addClass( "current" );
         $( "#"+tab_id ).addClass( "current" );
+        return false;
+    } );
+
+    $( "#mobile-menu-handler a" ).click( function() {
+
+        $(this).find('i').toggleClass('fa-bars');
+        $(this).find('i').toggleClass('fa-close');
+        $('#mobile-nav').toggle(300);
         return false;
     } );
 
@@ -49,6 +59,12 @@ jQuery(document).ready(function( $ ) {
         });
     });
 
+   $("#share-buttons a.facebook").data('href', 'http://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.location.toString()) );
+   $("#share-buttons a.twitter").data('href', 'http://twitter.com/intent/tweet?status=' + encodeURIComponent(document.title + "\n" + document.location.toString()) );
+   $("#share-buttons a.gplus").data('href', 'https://plus.google.com/share?url=' + encodeURIComponent(document.location.toString()) );
 
+   $('.js-share').click(function() {
+        window.open( $(this).data('href'), 'Compartilhar', 'width=500, height=500');
+    });
 
 });

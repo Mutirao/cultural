@@ -1,15 +1,40 @@
 <?php
-
 session_start();
-// CONGELADO
 
-include dirname(__FILE__) . '/includes/congelado-functions.php';
-include dirname(__FILE__) . '/includes/html.class.php';
-include dirname(__FILE__) . '/includes/utils.class.php';
-include dirname(__FILE__) . '/includes/opengraph.php';
-include dirname(__FILE__) . '/includes/mapasculturais2post/mapasculturais2post.php';
-include dirname(__FILE__) . '/includes/mapasculturais-api-proxy.php';
+function inc($file){
+    require __DIR__ . '/inc/' . $file;
+}
 
+// metaboxes
+inc('metaboxes/link.php');
+inc('metaboxes/mapasculturais-entity-relation.php');
+
+// post types
+inc('post-types/marca.php');
+
+// theme options
+inc('theme-options/destaques.php');
+inc('theme-options/mapasculturais-configuration.php');
+inc('theme-options/mapasculturais-configuration-category.php');
+
+// plugin do mapas culturais
+inc('mapasculturais2post/mapasculturais2post.php');
+
+// proxy da api do mapas cuturais
+inc('mapasculturais-api-proxy.php');
+
+// Custom template tags for this theme.
+inc('template-tags.php');
+
+// Custom functions that act independently of the theme templates.
+inc('extras.php');
+
+// Customizer additions.
+inc('customizer.php');
+inc('category-colors.php');
+
+// Extra classes for the widgets
+inc('widgets-extra-classes.php');
 
 if (!isset($content_width))
     $content_width = 1000;
@@ -125,7 +150,7 @@ function cultural_scripts() {
     $js_lib_path = get_bloginfo('template_directory') . (WP_DEBUG ? '/js/lib/' : '/js/min/');
 
     /* JUDO Font Awesome for the icons */
-    wp_enqueue_style('font-awesome', '//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
+    wp_enqueue_style('font-awesome', get_bloginfo('template_directory') . '/css/font-awesome-4.3.0/css/font-awesome.min.css');
 
     wp_enqueue_script('event-emmiter', $js_lib_path . 'EventEmitter.js', array('jquery'), '3.1.8', true);
 
@@ -159,7 +184,7 @@ function cultural_scripts() {
     $empty = [];
 
     foreach ($savedFilters as $key => $data) {
-        if ($configModel[$key]->type === 'entity') {
+        if (isset($configModel[$key]) && $configModel[$key]->type === 'entity') {
             foreach ($data as $id => $json) {
                 $data[$id] = json_decode($json);
             }
@@ -245,9 +270,13 @@ if (!is_admin()) {
 //        if(is_home() || is_archive() && get_post_type() === 'evento'){
         //ANGULAR
         wp_enqueue_script('moment', $js_lib_path . 'moment.js', array('jquery'), null, false);
-        wp_enqueue_script('moment-ptbr', $js_lib_path . 'moment.pt-br.js', array('moment'), null, false);
+        $moment_locale = 'pt-br';
+        if (substr(get_locale(), 0, 2) == 'es')
+            $moment_locale = 'es-es';
+        
+        wp_enqueue_script('moment-locale', $js_lib_path . 'moment.'.$moment_locale.'.js', array('moment'), null, false);
 
-        wp_enqueue_script('angular-core', $js_lib_path . 'angular.js', array('moment-ptbr'), null, false);
+        wp_enqueue_script('angular-core', $js_lib_path . 'angular.js', array('moment-locale'), null, false);
 
         wp_enqueue_script('angular-ui-router', $js_lib_path . 'angular-ui-router.js', array('angular-core'), null, false);
         //wp_enqueue_script('angular-resource', '//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js', array('angular-route'), null, false);
@@ -306,35 +335,11 @@ function cultural_widgets_init() {
 
 add_action('widgets_init', 'cultural_widgets_init');
 
-/**
- * Custom template tags for this theme.
- */
-require get_template_directory() . '/inc/template-tags.php';
-
-/**
- * Custom functions that act independently of the theme templates.
- */
-require get_template_directory() . '/inc/extras.php';
-
-/**
- * Customizer additions.
- */
-require get_template_directory() . '/inc/customizer.php';
-
-require get_template_directory() . '/inc/category-colors.php';
-
-/**
- * Extra classes for the widgets
- */
-require get_template_directory() . '/inc/widgets-extra-classes.php';
-
-
-add_filter('nav_menu_link_attributes', function($attr, $item) {
-    if ($item->object == 'category') {
-        $cat_data = get_option('category_' . $item->object_id);
-        $cat_color = $cat_data['color'];
-
-        $attr['style'] = 'background-color:' . $cat_color;
-    }
-    return $attr;
-}, 10, 4);
+// add_filter('nav_menu_link_attributes', function($attr, $item) {
+//     if ($item->object == 'category') {
+//         $cat_data = get_option('category_' . $item->object_id);
+//         $cat_color = $cat_data['color'];
+//         $attr['style'] = 'background-color:' . $cat_color;
+//     }
+//     return $attr;
+// }, 10, 4);
